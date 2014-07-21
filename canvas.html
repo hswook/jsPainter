@@ -2,18 +2,23 @@
 <html>
 <head>
     <title>Paint</title>
+    <link rel="stylesheet" media="screen" type="text/css" href="./libs/colorpicker/css/colorpicker.css" />
+    <link rel="stylesheet" type="text/css" href="./css/layout.css" />
+    
     <script src="./js/libs/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="./libs/colorpicker/js/colorpicker.js"></script>
     <script type="text/javascript" src="./js/paint.js"></script>
     <script type="text/javascript">
         $(function() {
             Paint.initialize();
-        })
+       })
     </script>
 </head>
 <body>
     <div id="tools">
         <p><button id="reset">RESET</button></p>
-        <select id="colors"></select>
+        <p>Select Pen Color</p>
+        <div id="colorSelector"><div style="background-color: #0000ff"></div></div>
     </div>
     <div>
         <p>Pen Preview</p>

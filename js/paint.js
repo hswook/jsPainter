@@ -9,13 +9,14 @@ var Paint = {
     drawColor: [],
     isDraw   : false,
     selectedColorValue : "#000000",
+/*
     colors : {
         "Black"     : "#000000",
         "Red"       : "#ff0000",
         "Blue"      : "#0000ff",
         "Yellow"    : "#ffff00"
     },
-
+*/
     initialize : function() {
         var self = this;
         var offset = $("#canvas").offset();
@@ -47,7 +48,7 @@ var Paint = {
         this.paintX.push(x);
         this.paintY.push(y);
         this.drawDrag.push(painting);
-        this.drawColor.push(this.selectedColorValue || this.colors[0]);
+        this.drawColor.push(this.selectedColorValue);
     },
 
     paintTrace : function() {
@@ -75,15 +76,20 @@ var Paint = {
 
     setColors : function() {
         var self = this;
-        var colorList = $("#colors");
-
-        $.each(this.colors, function(name, value) {
-            var option = "<option value=\"" + value + "\">" + name + "</option>";
-            colorList.append(option);
-        });
-
-        $("#colors").on("change", function(event) {
-            self.selectedColorValue = $(this).val();
+        $('#colorSelector').ColorPicker({
+            color: '#000000',
+            onShow: function (colpkr) {
+                $(colpkr).fadeIn(500);
+                return false;
+            },
+            onHide: function (colpkr) {
+                $(colpkr).fadeOut(500);
+                return false;
+            },
+            onChange: function (hsb, hex, rgb) {
+                $('#colorSelector div').css('backgroundColor', '#' + hex);
+                self.selectedColorValue = '#' + hex;
+            }
         });
     },
 
