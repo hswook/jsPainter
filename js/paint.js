@@ -5,18 +5,11 @@ var Paint = {
     previewContext : null,
     paintX    : [],
     paintY    : [],
-    drawDrag : [],
-    drawColor: [],
-    isDraw   : false,
-    selectedColorValue : "#000000",
-/*
-    colors : {
-        "Black"     : "#000000",
-        "Red"       : "#ff0000",
-        "Blue"      : "#0000ff",
-        "Yellow"    : "#ffff00"
-    },
-*/
+    locationTrace : [],
+    colorTrace: [],
+    isPaint   : false,
+    currentColorValue : "#000000",
+
     initialize : function() {
         var self = this;
         var offset = $("#canvas").offset();
@@ -24,20 +17,20 @@ var Paint = {
         this.context = this.canvas.getContext("2d");
         
         $("#canvas").mousedown(function(event) {
-            self.isDraw = true;
+            self.isPaint = true;
             self.appendTrace(event.pageX - offset.left, event.pageY - offset.top);
             self.paintTrace();
         });
         
         $("#canvas").mousemove(function(event) {
-            if(self.isDraw) {
+            if(self.isPaint) {
                 self.appendTrace(event.pageX - offset.left, event.pageY - offset.top, true);
                 self.paintTrace();
             }
         });
         
         $("#canvas").bind("mouseup mouseleave", function(event) {
-            self.isDraw = false;
+            self.isPaint = false;
         });
         
         this.setColors();
@@ -47,8 +40,8 @@ var Paint = {
     appendTrace : function(x, y, painting) {
         this.paintX.push(x);
         this.paintY.push(y);
-        this.drawDrag.push(painting);
-        this.drawColor.push(this.selectedColorValue);
+        this.locationTrace.push(painting);
+        this.colorTrace.push(this.currentColorValue);
     },
 
     paintTrace : function() {
@@ -57,7 +50,7 @@ var Paint = {
         
         for(var i = 0; i < this.paintX.length; i ++) {
             this.context.beginPath();
-            if(this.drawDrag[i] && i) {
+            if(this.locationTrace[i] && i) {
                 this.context.moveTo(this.paintX[i - 1], this.paintY[i - 1]);
             } else {
                 this.context.moveTo(this.paintX[i] - 1, this.paintY[i]);
@@ -65,7 +58,7 @@ var Paint = {
             
             this.context.lineTo(this.paintX[i], this.paintY[i]);
             this.context.closePath();
-            this.context.strokeStyle = this.drawColor[i];
+            this.context.strokeStyle = this.colorTrace[i];
             this.context.stroke();
         }
     },
@@ -88,7 +81,7 @@ var Paint = {
             },
             onChange: function (hsb, hex, rgb) {
                 $('#colorSelector div').css('backgroundColor', '#' + hex);
-                self.selectedColorValue = '#' + hex;
+                self.currentColorValue = '#' + hex;
             }
         });
     },
@@ -97,7 +90,7 @@ var Paint = {
         var self = this;
         $("#reset").on("click", function(event) {
             self.canvas.width = self.canvas.width;
-            self.paintX = [], self.paintY = [], self.drawDrag = [], self.drawColor = [];
+            self.paintX = [], self.paintY = [], self.locationTrace = [], self.colorTrace = [];
         });
     }
 
